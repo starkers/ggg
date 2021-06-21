@@ -34,12 +34,14 @@ I used to use [this monstrosity](https://github.com/starkers/homedirectory/blob/
 
 # installation
 
-1. Download `ggg` and ensure the file is executable
+## get the binary
 
-### golang:
+### golang
 If you have go: `go get -u github.com/starkers/ggg`
 
-### cli:
+the `ggg` binary should be built now
+
+### manually
 download a binary from a release from: https://github.com/starkers/ggg/releases/latest
 
 (don't forget to `chmod +x` the file after downloading it)
@@ -48,23 +50,15 @@ You can place the binary anywhere **so long as it is inside your** `$PATH`
 
 In this case I'm going to store mine as `$HOME/.bin/ggg`
 
-EG:
-
-```
-# make a directory if it doesn't exist
-GGG_BIN=~/.bin/ggg/ggg-bin
-
-# download it
-wget https://github.com/release/latest -O "${GGG_BIN}"
-
-# make it executable
-chmod +x "${GGG_BIN}"
-```
 
 2: add Aliases to your various shell configs.. EG:
 
 
-### 2.1 bash / zsh
+
+## configre your shell
+
+
+### bash / zsh
 
 add something like this to your `~/.profile`, `~/.bashrc` or `~/.zshrc` (whichever u use really):
 
@@ -78,7 +72,7 @@ if [[ -o interactive ]]; then
 fi
 ```
 
-### 2.2 fish
+### fish
 
 Add something like this to a fish conf
 
