@@ -27,5 +27,5 @@ build:
 ## Clean artifacts
 #
 clean:
-	rm -v $(BINARY)-*
+	rm -v ggg-*
 
