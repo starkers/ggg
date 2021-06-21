@@ -1,6 +1,36 @@
 # ggg
 
-good git getter
+**g**ood **g**it **g**etter
+
+
+Written because I like to `git clone` and `cd` in a single command
+
+
+
+# Example
+
+In this example we:
+1. Clone a https:// git repo and automatically `cd` into its location.
+2. Next we clone a `git@` git repo and automatically arrive in its current working dir.
+3. Repeat command 1, and we are back where its code resides
+
+
+![example](/media/example-zsh.png)
+
+
+
+## FAQ:
+
+### Can I clone to a different path?
+
+Yes, set `path` in: `~/.config/ggg.toml`
+
+### Why?
+
+I used to use [this monstrosity](https://github.com/starkers/homedirectory/blob/a8f4e95dd5bd6eb857e30935396e51a442acd619/home/aliases#L105-L159) of a zsh/bash alias for years, but after migrating to fish I missed it... Also, it would be nice to make something more "robust"
+
+
+---
 
 # installation
 
