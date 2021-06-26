@@ -1,62 +1,57 @@
 package shell
 
 import (
-	"bytes"
 	"context"
-	"github.com/starkers/ggg/pkg/logger"
-	"os"
+	"fmt"
 	"os/exec"
 	"time"
+
+	"github.com/starkers/ggg/pkg/logger"
 )
 
 func Run(
 	command string,
-	timeout time.Duration,
 ) error {
+
+	// adding a huge 15 minute timeout
+	// TODO: ensure timeout is handled correctly and provide configuration options
+	timeout := 15 * time.Minute
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	var outBuffer bytes.Buffer
-	logger.Good("running: " + command)
+	logger.Good("running: sh " + command)
 
+	// assemble with a shell, eg: "sh -c runMe..."
 	runMe := []string{"-c", command}
 	cmd := exec.CommandContext(ctx, "sh", runMe...)
 
-	cmd.Stdout = &outBuffer
-	cmd.Stderr = &outBuffer
-
-	start := time.Now()
-
-	err := cmd.Run()
-	duration := time.Since(start)
-
-	logger.Good("command took: " + duration.String())
+	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		logger.Bad(err)
-		logger.Bad(cmd.Stdout)
-		os.Exit(5)
+		return err
 	}
+
+	// redirect stdout -> stderr
+	cmd.Stderr = cmd.Stdout
+
+	// start running it
+	if err = cmd.Start(); err != nil {
+		return err
+	}
+	// Get real-time output, break when stdoutRead has its first err (typically some kind of EOF)
+	for {
+		tmp := make([]byte, 1024)
+		_, err := stdout.Read(tmp)
+		fmt.Print(string(tmp))
+		if err != nil {
+			break
+		}
+	}
+
+	// block and wait for the cmd to complete
+	if err = cmd.Wait(); err != nil {
+		return err
+	}
+
 	return nil
-
-	// TODO: turn on timeout+context checking
-
-	//// Check if the ctx timeout was hit first
-	//if ctx.Err() == context.DeadlineExceeded {
-	//	log.Infow("command timed out.. not ",
-	//		"error", err,
-	//		"contextErr", ctx.Err(),
-	//		"output", string(outBuffer.Bytes()),
-	//		"duration", duration,
-	//	)
-	//	return ctx.Err()
-	//}
-	//
-	//if err != nil {
-	//	log.Errorw("Non-zero exit code",
-	//		"output", string(outBuffer.Bytes()),
-	//		"error", err,
-	//	)
-	//}
-	//return err
 
 }

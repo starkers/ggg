@@ -2,12 +2,10 @@ package cmd
 
 import (
 	"fmt"
-	"os"
-	"strings"
-	"time"
-
 	"github.com/starkers/ggg/pkg/logger"
 	"github.com/starkers/ggg/pkg/shell"
+	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/starkers/ggg/pkg/git"
@@ -52,24 +50,25 @@ func doWork() {
 	splitBySlash := strings.Split(result, "/")
 	slashCount := len(splitBySlash)
 	subDir := strings.Join(splitBySlash[0:slashCount-1], "/")
+	cloneCmd := "git clone --progress " + repoURLFlag
+	//cloneCmd := "git clone -v " + repoURLFlag
 	if directoryExists(subDir) {
-		cmd := fmt.Sprintf("cd %s && git clone %s", subDir, repoURLFlag)
+		cmd := fmt.Sprintf("cd %s && %s", subDir, cloneCmd)
 		// logger.Good(fmt.Sprintf("Running 'git clone %s' -> %s", repoURLFlag, result))
-		err := shell.Run(cmd, 30*time.Second)
+		err := shell.Run(cmd)
 		if err != nil {
 			logger.Bad(err)
 		}
 	} else {
-		cmd := fmt.Sprintf("mkdir -p %s", subDir)
+		cmd := fmt.Sprintf("mkdir -pv %s", subDir)
 		logger.Good("making dir: " + subDir)
-		err := shell.Run(cmd, 2*time.Second)
+		err := shell.Run(cmd)
 		if err != nil {
 			logger.Bad(err)
 		}
 		if directoryExists(subDir) {
-			cmd := fmt.Sprintf("cd %s && git clone %s", subDir, repoURLFlag)
-			// logger.Good(fmt.Sprintf("Running 'git clone %s' -> %s", repoURLFlag, result))
-			err := shell.Run(cmd, 30*time.Second)
+			cmd := fmt.Sprintf("cd %s && %s", subDir, cloneCmd)
+			err := shell.Run(cmd)
 			if err != nil {
 				logger.Bad(err)
 			}
