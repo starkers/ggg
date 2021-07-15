@@ -2,6 +2,7 @@ package logger
 
 import (
 	"fmt"
+
 	"github.com/fatih/color"
 )
 
@@ -12,6 +13,7 @@ func Info(input interface{}) {
 		fmt.Println(err)
 	}
 }
+
 func Good(input interface{}) {
 	d := color.New(color.FgGreen)
 	_, err := d.Printf("# ✓ %v\n", input)
@@ -35,6 +37,7 @@ func Warn(input interface{}) {
 		fmt.Println(err)
 	}
 }
+
 func Raw(input interface{}) {
 	fmt.Println(input)
 }
