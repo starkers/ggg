@@ -3,6 +3,7 @@ package git
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/starkers/ggg/pkg/logger"
@@ -32,7 +33,26 @@ func mungeUrl(input string) string {
 	commonPrefixList := []string{
 		"http://",
 		"https://",
+	}
+
+	keybasePrefixList := []string{
 		"keybase://",
+	}
+
+	for _, prefix := range keybasePrefixList {
+		if strings.HasPrefix(input, prefix) {
+			slicedHTTP := strings.Split(input, "/")
+			slashCount := len(slicedHTTP)
+			hostname = slicedHTTP[2]
+			rightBlobSliced := slicedHTTP[3:slashCount]
+			rightBlob := strings.Join(rightBlobSliced, "/")
+			if strings.HasSuffix(rightBlob, ".git") {
+				rightResult = strings.Replace(rightBlob, ".git", "", 1)
+			} else {
+				rightResult = rightBlob
+			}
+			return fmt.Sprintf("keybase/%s/%s", hostname, rightResult)
+		}
 	}
 
 	for _, prefix := range commonPrefixList {
@@ -50,18 +70,25 @@ func mungeUrl(input string) string {
 			return fmt.Sprintf("%s/%s", hostname, rightResult)
 		}
 	}
-	if strings.HasPrefix(input, "git@") {
+
+	gitRegex := ".*@.*"
+	match, _ := regexp.MatchString(gitRegex, input)
+	if match {
 		slicedColon := strings.Split(input, ":")
 		if len(slicedColon) > 1 {
 			hostname = slicedColon[0]
-			hostname = strings.Replace(hostname, "git@", "", 1)
+			fmt.Println(hostname)
+			x := strings.Split(hostname, "@")
+			fmt.Println(x[1])
+			// hostname = strings.Replace(hostname, "git@", "", 1)
+
 			rightBlob := slicedColon[(len(slicedColon) - 1)]
 			if strings.HasSuffix(rightBlob, ".git") {
 				rightResult = strings.Replace(rightBlob, ".git", "", 1)
 			} else {
 				rightResult = rightBlob
 			}
-			return fmt.Sprintf("%s/%s", hostname, rightResult)
+			return fmt.Sprintf("%s/%s", x[1], rightResult)
 		}
 	}
 	return "unknown"

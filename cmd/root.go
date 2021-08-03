@@ -24,6 +24,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", defaultCfg, "config file")
 	rootCmd.PersistentFlags().StringVarP(&basePath, "path", "p", "~/src", "where you would like to keep your git code")
 	err := viper.BindPFlag("path", rootCmd.PersistentFlags().Lookup("path"))
+
 	if err != nil {
 		logger.Bad(err)
 		os.Exit(1)
