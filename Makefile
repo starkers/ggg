@@ -20,9 +20,11 @@ help:
 ## Build the binary
 #  (placed in root of repository)
 build:
-	env GOPRIVATE=$(REPO) CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -ldflags="-X main.VERSION=${VERSION} -s -w" -o $(BINARY)-Darwin-arm64 $(REPO)/
-	env GOPRIVATE=$(REPO) CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags="-X main.VERSION=${VERSION} -s -w" -o $(BINARY)-Darwin-amd64 $(REPO)/
-	env GOPRIVATE=$(REPO) CGO_ENABLED=0 GOOS=linux  GOARCH=amd64 go build -ldflags="-X main.VERSION=${VERSION} -s -w" -o $(BINARY)-Linux-amd64  $(REPO)/
+	env GOPRIVATE=$(REPO) CGO_ENABLED=0 GOOS=darwin  GOARCH=arm64 go build -ldflags="-X main.VERSION=${VERSION} -s -w" -o $(BINARY)-Darwin-arm64  $(REPO)/
+	env GOPRIVATE=$(REPO) CGO_ENABLED=0 GOOS=darwin  GOARCH=amd64 go build -ldflags="-X main.VERSION=${VERSION} -s -w" -o $(BINARY)-Darwin-amd64  $(REPO)/
+	env GOPRIVATE=$(REPO) CGO_ENABLED=0 GOOS=linux   GOARCH=arm64 go build -ldflags="-X main.VERSION=${VERSION} -s -w" -o $(BINARY)-Linux-arm64   $(REPO)/
+	env GOPRIVATE=$(REPO) CGO_ENABLED=0 GOOS=linux   GOARCH=amd64 go build -ldflags="-X main.VERSION=${VERSION} -s -w" -o $(BINARY)-Linux-amd64   $(REPO)/
+	env GOPRIVATE=$(REPO) CGO_ENABLED=0 GOOS=freebsd GOARCH=amd64 go build -ldflags="-X main.VERSION=${VERSION} -s -w" -o $(BINARY)-FreeBSD-amd64 $(REPO)/
 
 ## Clean artifacts
 #
