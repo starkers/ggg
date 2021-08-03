@@ -77,10 +77,7 @@ func mungeUrl(input string) string {
 		slicedColon := strings.Split(input, ":")
 		if len(slicedColon) > 1 {
 			hostname = slicedColon[0]
-			fmt.Println(hostname)
 			x := strings.Split(hostname, "@")
-			fmt.Println(x[1])
-			// hostname = strings.Replace(hostname, "git@", "", 1)
 
 			rightBlob := slicedColon[(len(slicedColon) - 1)]
 			if strings.HasSuffix(rightBlob, ".git") {
