@@ -51,7 +51,6 @@ func doWork() {
 	slashCount := len(splitBySlash)
 	subDir := strings.Join(splitBySlash[0:slashCount-1], "/")
 	cloneCmd := "git clone --progress " + repoURLFlag
-	//cloneCmd := "git clone -v " + repoURLFlag
 	if directoryExists(subDir) {
 		cmd := fmt.Sprintf("cd %s && %s", subDir, cloneCmd)
 		// logger.Good(fmt.Sprintf("Running 'git clone %s' -> %s", repoURLFlag, result))
@@ -93,7 +92,6 @@ func directoryExists(path string) bool {
 	fStat, err := file.Stat()
 	if err != nil {
 		logger.Warn(err)
-		//log.Debug(err)
 		return false
 	}
 	return fStat.IsDir()

@@ -44,14 +44,11 @@ func initConfig() {
 	viper.SetConfigFile(expandedPathToCfg)
 	viper.AddConfigPath(expandedPathToCfg)
 
-	// viper.SafeWriteConfigAs(expandedPathToCfg)
-	// fmt.Printf("wront %s", cfgFile)
-	// os.Exit(0)
-	// assuming on config file, its "OK" if we cannot read it (we'll use the defaults/args)
+	/* on first run write out a default config file if one does not exist already */
 	if cfgFile == defaultCfg {
 		err := viper.ReadInConfig()
 		if err != nil {
-			fmt.Printf("writing initial config: %s", expandedPathToCfg)
+			fmt.Printf("# no config found, writing initial config to: %s\n", expandedPathToCfg)
 			err = viper.SafeWriteConfigAs(expandedPathToCfg)
 			if err != nil {
 				fmt.Println(err)
@@ -61,16 +58,7 @@ func initConfig() {
 
 	} else {
 
-		// if the user specificed a specific config file, we must be able to read it
-
-		// home, err := homedir.Dir()
-		// if err != nil {
-		// 	fmt.Println(err)
-		// 	os.Exit(1)
-		// }
-		// Search config in home directory with name ".cobra" (without extension).
-		// viper.AddConfigPath(home)
-		// viper.SetConfigName(".cobra")
+		// if the user has a config file, we must be able to read it
 
 		if err := viper.ReadInConfig(); err != nil {
 			fmt.Println("Can't read config:", err)

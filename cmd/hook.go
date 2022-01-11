@@ -51,6 +51,7 @@ var forZSH = &cobra.Command{
 	},
 }
 
+// same looking config hook for zsh or bash
 func hookGeneric(shell string) {
 	self := getSelf()
 	data := fmt.Sprintf(`
@@ -60,9 +61,11 @@ func hookGeneric(shell string) {
 
 function ggg(){
   local GGG_BIN="%s"
-  if "${GGG_BIN}" work -r "${1}" ; then
-    local DEST="$("${GGG_BIN}" dest -r "${1}")"
-    cd "${DEST}"
+  if [ -f "${GGG_BIN}" ]; then
+    if "${GGG_BIN}" work -r "${1}" ; then
+      local DEST="$("${GGG_BIN}" dest -r "${1}")"
+      cd "${DEST}"
+    fi
   fi
 }
 
@@ -71,10 +74,8 @@ function ggg(){
 	fmt.Println(data)
 }
 
+// fish only hook
 func hookFish() {
-	// dir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
-	// bin := os.Args[0]
-	// self := fmt.Sprintf("%s/%s", dir, bin)
 	self := getSelf()
 
 	data := fmt.Sprintf(`
@@ -82,9 +83,11 @@ func hookFish() {
 # config for fish by 'ggg'
 
 set GGG_BIN "%s"
-function ggg
-  "$GGG_BIN" work -r "$argv[1]"
-  cd ( "$GGG_BIN" dest -r "$argv[1]" )
+if test -f $GGG_BIN
+  function ggg
+    "$GGG_BIN" work -r "$argv[1]"
+    cd ( "$GGG_BIN" dest -r "$argv[1]" )
+  end
 end
 `, self)
 
