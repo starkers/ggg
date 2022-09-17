@@ -27,14 +27,14 @@ func init() {
 var workCmd = &cobra.Command{
 	Use:   "work",
 	Short: "do work",
-	Long:  `do work n stuff`,
+	Long:  `do work and stuff`,
 	Run: func(cmd *cobra.Command, args []string) {
 		doWork()
 	},
 }
 
 func doWork() {
-	//logger.Info("doing work for: " + repoURLFlag)
+	// logger.Info("doing work for: " + repoURLFlag)
 	result, err := git.FigureUnixDiskPath(basePath, repoURLFlag)
 	if err != nil {
 		logger.Bad(err)
@@ -45,16 +45,12 @@ func doWork() {
 		return
 	}
 
-	// try to make the dir above (so we can do a clone afterwards)
-
 	splitBySlash := strings.Split(result, "/")
 	slashCount := len(splitBySlash)
 	subDir := strings.Join(splitBySlash[0:slashCount-1], "/")
 	cloneCmd := "git clone --progress " + repoURLFlag
-	//cloneCmd := "git clone -v " + repoURLFlag
 	if directoryExists(subDir) {
 		cmd := fmt.Sprintf("cd %s && %s", subDir, cloneCmd)
-		// logger.Good(fmt.Sprintf("Running 'git clone %s' -> %s", repoURLFlag, result))
 		err := shell.Run(cmd)
 		if err != nil {
 			logger.Bad(err)
@@ -86,14 +82,12 @@ func directoryExists(path string) bool {
 		err := file.Close()
 		if err != nil {
 			logger.Warn(err)
-			//log.Debug(err)
 		}
 	}(file)
 
 	fStat, err := file.Stat()
 	if err != nil {
 		logger.Warn(err)
-		//log.Debug(err)
 		return false
 	}
 	return fStat.IsDir()

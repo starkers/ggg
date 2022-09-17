@@ -3,20 +3,26 @@ package shell
 import (
 	"context"
 	"fmt"
+	str2duration "github.com/xhit/go-str2duration/v2"
+	"os"
 	"os/exec"
-	"time"
 
+	"github.com/spf13/viper"
 	"github.com/starkers/ggg/pkg/logger"
 )
 
-func Run(
-	command string,
-) error {
+func Run(command string) error {
+	timeoutFromConfig := viper.Get("timeout")
+	msg := fmt.Sprintf("using git timeout: %s", timeoutFromConfig)
+	logger.Info(msg)
+	durationFromString, err := str2duration.ParseDuration(fmt.Sprintf("%s", timeoutFromConfig))
+	if err != nil {
+		msg := fmt.Sprintf("couldn't understand the timeout '%s'.. please use something like '1h', or '2d1h10m'", timeoutFromConfig)
+		logger.Bad(msg)
+		os.Exit(1)
+	}
 
-	// adding a huge 15 minute timeout
-	// TODO: ensure timeout is handled correctly and provide configuration options
-	timeout := 15 * time.Minute
-	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	ctx, cancel := context.WithTimeout(context.Background(), durationFromString)
 	defer cancel()
 
 	logger.Good("running: sh " + command)
@@ -53,5 +59,4 @@ func Run(
 	}
 
 	return nil
-
 }

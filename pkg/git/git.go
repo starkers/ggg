@@ -12,7 +12,6 @@ import (
 )
 
 func FigureUnixDiskPath(localPath string, url string) (string, error) {
-
 	if url == "" {
 		err := errors.New("blank git URL received, please provide a URL argument")
 		return "", err
@@ -22,12 +21,12 @@ func FigureUnixDiskPath(localPath string, url string) (string, error) {
 	if err != nil {
 		logger.Bad(err)
 	}
-	subDir := mungeUrl(url)
+	subDir := mungeURL(url)
 	result := fmt.Sprintf("%s/%s", expandedPath, subDir)
 	return result, nil
 }
 
-func mungeUrl(input string) string {
+func mungeURL(input string) string {
 	rightResult := ""
 	hostname := ""
 	commonPrefixList := []string{
