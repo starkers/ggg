@@ -14,15 +14,17 @@ import (
 
 var (
 	defaultCfg = "~/.config/ggg.toml"
-	cfgFile    string
-	basePath   string
 	allArgs    = os.Args
+	basePath   string
+	cfgFile    string
+	timeout    string
 )
 
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", defaultCfg, "config file")
 	rootCmd.PersistentFlags().StringVarP(&basePath, "path", "p", "~/src", "where you would like to keep your git code")
+	rootCmd.PersistentFlags().StringVarP(&timeout, "timeout", "t", "1h", "wait this long before assuming git has timed out")
 	err := viper.BindPFlag("path", rootCmd.PersistentFlags().Lookup("path"))
 
 	if err != nil {
@@ -30,6 +32,7 @@ func init() {
 		os.Exit(1)
 	}
 	viper.SetDefault("path", basePath)
+	viper.SetDefault("timeout", timeout)
 }
 
 func getExpandedFilePath(input string) (string, error) {
@@ -44,36 +47,21 @@ func initConfig() {
 	viper.SetConfigFile(expandedPathToCfg)
 	viper.AddConfigPath(expandedPathToCfg)
 
-	// viper.SafeWriteConfigAs(expandedPathToCfg)
-	// fmt.Printf("wront %s", cfgFile)
-	// os.Exit(0)
 	// assuming on config file, its "OK" if we cannot read it (we'll use the defaults/args)
 	if cfgFile == defaultCfg {
 		err := viper.ReadInConfig()
 		if err != nil {
-			fmt.Printf("writing initial config: %s", expandedPathToCfg)
+			msg := fmt.Sprintf("first launch.. writing initial config: %s", expandedPathToCfg)
+			logger.Info(msg)
 			err = viper.SafeWriteConfigAs(expandedPathToCfg)
 			if err != nil {
-				fmt.Println(err)
+				logger.Bad(err)
 				os.Exit(1)
 			}
 		}
-
 	} else {
-
-		// if the user specificed a specific config file, we must be able to read it
-
-		// home, err := homedir.Dir()
-		// if err != nil {
-		// 	fmt.Println(err)
-		// 	os.Exit(1)
-		// }
-		// Search config in home directory with name ".cobra" (without extension).
-		// viper.AddConfigPath(home)
-		// viper.SetConfigName(".cobra")
-
 		if err := viper.ReadInConfig(); err != nil {
-			fmt.Println("Can't read config:", err)
+			fmt.Println("cannot read config:", err)
 			os.Exit(1)
 		}
 	}
