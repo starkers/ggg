@@ -69,7 +69,7 @@ func TestMunglURL(t *testing.T) {
 			want:  "github.com/foo/bar"},
 	}
 	for _, tc := range tests {
-		got := git.MungeURLForTest(tc.input)
+		got := git.Test_mungeURL(tc.input)
 		if !reflect.DeepEqual(tc.want, got) {
 			t.Fatalf("%s: expected: %v, got: %v", tc.name, tc.want, got)
 		}

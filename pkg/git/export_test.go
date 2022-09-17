@@ -1,5 +1,5 @@
 package git
 
-func MungeURLForTest(input string) string{
-  return mungeURL(input)
+func Test_mungeURL(input string) {
+	return mungeURL(input)
 }
