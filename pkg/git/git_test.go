@@ -1,7 +1,6 @@
 package git_test
 
 import (
-	"fmt"
 	"github.com/starkers/ggg/pkg/git"
 	"reflect"
 	"testing"
@@ -51,25 +50,6 @@ func TestFigureUnixDiskPath(t *testing.T) {
 	for _, tc := range tests {
 		got, _ := git.FigureUnixDiskPath(tc.baseDir, tc.inputURL)
 		// TODO: test the errors
-		if !reflect.DeepEqual(tc.want, got) {
-			t.Fatalf("%s: expected: %v, got: %v", tc.name, tc.want, got)
-		}
-	}
-}
-
-func TestMunglURL(t *testing.T) {
-	fmt.Println("asdasd")
-	tests := []struct {
-		name  string
-		input string
-		want  string
-	}{
-		{name: "simple",
-			input: "git@github.com:foo/bar.git",
-			want:  "github.com/foo/bar"},
-	}
-	for _, tc := range tests {
-		got := git.Test_mungeURL(tc.input)
 		if !reflect.DeepEqual(tc.want, got) {
 			t.Fatalf("%s: expected: %v, got: %v", tc.name, tc.want, got)
 		}
