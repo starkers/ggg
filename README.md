@@ -37,7 +37,7 @@ I used to use [this monstrosity](https://github.com/starkers/homedirectory/blob/
 ## get the binary
 
 ### golang
-If you have go: `go get -u github.com/starkers/ggg`
+If you have go: `go install github.com/starkers/ggg@latest`
 
 the `ggg` binary should be built now
 
