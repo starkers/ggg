@@ -5,7 +5,7 @@
 
 Written because I like to `git clone` and `cd` in a single command.
 
-I also like to clome my git repo's into a heirarchical directory structure which.
+I also like to clone my git repo's into a **heirarchical directory structure**.
 
 EG:
 
